@@ -19,8 +19,10 @@ class handler(BaseHTTPRequestHandler):
             keyword = body.get("keyword", "")
             state = body.get("state", "")
             naics = body.get("naics", "")
-            min_amount = body.get("min_amount")
-            max_amount = body.get("max_amount")
+            raw_min = body.get("min_amount")
+            raw_max = body.get("max_amount")
+            min_amount = float(raw_min) if raw_min not in (None, "") else None
+            max_amount = float(raw_max) if raw_max not in (None, "") else None
             page = int(body.get("page", 1))
 
             # Combine keyword and NAICS into keywords list
@@ -52,9 +54,9 @@ class handler(BaseHTTPRequestHandler):
             if min_amount is not None or max_amount is not None:
                 amount_filter = {}
                 if min_amount is not None:
-                    amount_filter["lower_bound"] = float(min_amount)
+                    amount_filter["lower_bound"] = min_amount
                 if max_amount is not None:
-                    amount_filter["upper_bound"] = float(max_amount)
+                    amount_filter["upper_bound"] = max_amount
                 filters["award_amounts"] = [amount_filter]
 
             # Build the API request body

@@ -24,7 +24,7 @@ class handler(BaseHTTPRequestHandler):
             api_body = {
                 "keyword": keyword,
                 "rows": 25,
-                "startRecord": page * 25,
+                "startRecordNum": page * 25 + 1,
                 "oppStatuses": status,
             }
 

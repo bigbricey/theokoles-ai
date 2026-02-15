@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GovContract Finder - Federal Contracts, Grants & Awards</title>
+    <meta name="description" content="Search open federal contract opportunities, grants, and awarded contracts across SAM.gov, Grants.gov, and USAspending.gov — all in one place.">
+    <meta property="og:title" content="GovContract Finder - Federal Contracts, Grants & Awards">
+    <meta property="og:description" content="Search open federal contract opportunities, grants, and awarded contracts across three official government databases.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://theokoles.ai">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="GovContract Finder">
+    <meta name="twitter:description" content="Search federal contracts, grants & awards across SAM.gov, Grants.gov, and USAspending.gov.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F3DB;</text></svg>">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -836,10 +845,10 @@
     <!-- ── Header ────────────────────────────────────────── -->
     <div class="header">
         <div class="header-inner">
-            <div class="logo">
+            <a href="/" class="logo" style="text-decoration:none">
                 <div class="logo-icon">GC</div>
                 <div class="logo-text">Gov<span>Contract</span> Finder</div>
-            </div>
+            </a>
             <div class="header-right">
                 <span class="header-tagline">Federal Contracts, Grants &amp; Awards</span>
                 <div class="live-badge">
@@ -898,13 +907,13 @@
 
         <!-- ── Tab 1: Open Opportunities (SAM.gov) ──────── -->
         <div class="search-section" id="oppSearch">
-            <div class="search-title">Find Open Opportunities</div>
+            <h2 class="search-title">Find Open Opportunities</h2>
             <div class="search-subtitle">
                 Search active federal contract opportunities from SAM.gov &mdash; find solicitations, presolicitations, and more to bid on right now.
             </div>
 
             <div class="search-bar">
-                <input type="text" class="search-input" id="oppKeyword"
+                <input type="text" class="search-input" id="oppKeyword" aria-label="Search opportunities"
                        placeholder="Search opportunities... (e.g., IT services, cybersecurity, construction)" autofocus>
                 <button class="search-btn" id="oppSearchBtn" onclick="searchOpportunities()">Search</button>
             </div>
@@ -912,7 +921,7 @@
             <div class="filters">
                 <div class="filter-group">
                     <span class="filter-label">Opportunity Type</span>
-                    <select class="filter-select" id="oppType">
+                    <select class="filter-select" id="oppType" aria-label="Opportunity Type">
                         <option value="">All Types</option>
                         
                         <option value="o">Solicitation</option>
@@ -933,7 +942,7 @@
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">NAICS Code</span>
-                    <select class="filter-select" id="oppNaics">
+                    <select class="filter-select" id="oppNaics" aria-label="NAICS Code">
                         <option value="">All Industries</option>
                         
                         <option value="236220">236220 - Commercial Building Construction</option>
@@ -1003,13 +1012,13 @@
 
         <!-- ── Tab 2: Federal Grants (Grants.gov) ───────── -->
         <div class="search-section" id="grantSearch" style="display:none">
-            <div class="search-title">Find Federal Grants</div>
+            <h2 class="search-title">Find Federal Grants</h2>
             <div class="search-subtitle">
                 Search federal grant funding opportunities from Grants.gov &mdash; find posted, forecasted, and archived grants across all agencies.
             </div>
 
             <div class="search-bar">
-                <input type="text" class="search-input" id="grantKeyword"
+                <input type="text" class="search-input" id="grantKeyword" aria-label="Search grants"
                        placeholder="Search grants... (e.g., STEM education, climate research, community health)">
                 <button class="search-btn" id="grantSearchBtn" onclick="searchGrants()">Search</button>
             </div>
@@ -1017,7 +1026,7 @@
             <div class="filters">
                 <div class="filter-group">
                     <span class="filter-label">Status</span>
-                    <select class="filter-select" id="grantStatus">
+                    <select class="filter-select" id="grantStatus" aria-label="Grant Status">
                         <option value="posted">Posted (Open)</option>
                         <option value="forecasted">Forecasted</option>
                         <option value="closed">Closed</option>
@@ -1030,13 +1039,13 @@
 
         <!-- ── Tab 3: Awarded Contracts (USAspending.gov) ── -->
         <div class="search-section" id="awardSearch" style="display:none">
-            <div class="search-title">Search Awarded Contracts</div>
+            <h2 class="search-title">Search Awarded Contracts</h2>
             <div class="search-subtitle">
                 See who won federal contracts with real award data from USAspending.gov (2024&ndash;2026). Explore recipients, amounts, and locations.
             </div>
 
             <div class="search-bar">
-                <input type="text" class="search-input" id="awardKeyword"
+                <input type="text" class="search-input" id="awardKeyword" aria-label="Search awarded contracts"
                        placeholder="Search awarded contracts... (e.g., IT services, cybersecurity, construction)">
                 <button class="search-btn" id="awardSearchBtn" onclick="searchAwarded()">Search</button>
             </div>
@@ -1044,7 +1053,7 @@
             <div class="filters">
                 <div class="filter-group">
                     <span class="filter-label">State</span>
-                    <select class="filter-select" id="awardState">
+                    <select class="filter-select" id="awardState" aria-label="State">
                         <option value="">All States</option>
                         
                         <option value="AL">Alabama</option>
@@ -1153,7 +1162,7 @@
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">NAICS Code</span>
-                    <select class="filter-select" id="awardNaics">
+                    <select class="filter-select" id="awardNaics" aria-label="NAICS Code">
                         <option value="">All Industries</option>
                         
                         <option value="236220">236220 - Commercial Building Construction</option>
@@ -1216,11 +1225,11 @@
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Min Amount ($)</span>
-                    <input type="number" class="filter-input" id="minAmount" placeholder="0">
+                    <input type="number" class="filter-input" id="minAmount" placeholder="0" aria-label="Minimum Amount">
                 </div>
                 <div class="filter-group">
                     <span class="filter-label">Max Amount ($)</span>
-                    <input type="number" class="filter-input" id="maxAmount" placeholder="No limit">
+                    <input type="number" class="filter-input" id="maxAmount" placeholder="No limit" aria-label="Maximum Amount">
                 </div>
             </div>
         </div>
@@ -1341,6 +1350,13 @@
             return div.innerHTML;
         }
 
+        function decodeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.innerHTML = str;
+            return div.textContent || div.innerText || '';
+        }
+
         function showLoading(message) {
             document.getElementById('resultsArea').innerHTML = `
                 <div class="loading"><div class="spinner"></div><div>${escHtml(message)}</div></div>
@@ -1392,7 +1408,11 @@
            ───────────────────────────────────────────────── */
         async function searchOpportunities(page = 0) {
             const keyword = document.getElementById('oppKeyword').value.trim();
-            if (!keyword) { document.getElementById('oppKeyword').focus(); return; }
+            if (!keyword) {
+                document.getElementById('oppKeyword').focus();
+                showEmpty('Enter a search term', 'Type a keyword like "IT services" or "cybersecurity" to find opportunities');
+                return;
+            }
 
             oppPage = page;
             const btn = document.getElementById('oppSearchBtn');
@@ -1482,7 +1502,11 @@
            ───────────────────────────────────────────────── */
         async function searchGrants(page = 0) {
             const keyword = document.getElementById('grantKeyword').value.trim();
-            if (!keyword) { document.getElementById('grantKeyword').focus(); return; }
+            if (!keyword) {
+                document.getElementById('grantKeyword').focus();
+                showEmpty('Enter a search term', 'Type a keyword like "STEM education" or "climate research" to find grants');
+                return;
+            }
 
             grantPage = page;
             const btn = document.getElementById('grantSearchBtn');
@@ -1536,7 +1560,7 @@
                         <div class="card-top">
                             <div>
                                 <div class="card-agency">${escHtml(g.agency)}</div>
-                                <div class="card-title">${escHtml(g.title)}</div>
+                                <div class="card-title">${escHtml(decodeHtml(g.title))}</div>
                             </div>
                             <div class="card-badges">
                                 ${getGrantStatusBadge(g.status)}
@@ -1565,7 +1589,11 @@
            ───────────────────────────────────────────────── */
         async function searchAwarded(page = 1) {
             const keyword = document.getElementById('awardKeyword').value.trim();
-            if (!keyword) { document.getElementById('awardKeyword').focus(); return; }
+            if (!keyword) {
+                document.getElementById('awardKeyword').focus();
+                showEmpty('Enter a search term', 'Type a keyword like "IT services" or "construction" to find awarded contracts');
+                return;
+            }
 
             awardPage = page;
             const btn = document.getElementById('awardSearchBtn');
@@ -1615,20 +1643,21 @@
             `;
 
             for (const r of results) {
-                const id = r['generated_internal_id'] || '';
-                const agency = r['Awarding Agency'] || r['Awarding Sub Agency'] || 'Unknown Agency';
-                const recipient = r['Recipient Name'] || 'Unknown Recipient';
-                const amount = r['Award Amount'];
-                const desc = r['Description'] || 'No description available';
-                const startDate = r['Start Date'];
-                const endDate = r['End Date'];
-                const stateCode = r['Place of Performance State Code'] || '';
-                const city = r['Place of Performance City'] || '';
+                const id = r.internal_id || '';
+                const agency = r.agency || r.sub_agency || 'Unknown Agency';
+                const recipient = r.recipient || 'Unknown Recipient';
+                const amount = r.amount;
+                const desc = r.description || 'No description available';
+                const startDate = r.start_date;
+                const endDate = r.end_date;
+                const stateCode = r.state || '';
+                const city = r.city || '';
                 const location = [city, stateCode].filter(Boolean).join(', ');
-                const awardId = r['Award ID'] || '';
+                const awardId = r.award_id || '';
+                const usaUrl = id ? 'https://www.usaspending.gov/award/' + encodeURIComponent(id) : '';
 
                 html += `
-                    <div class="card" onclick="showAwardDetail('${escHtml(id)}')">
+                    <div class="card" ${usaUrl ? 'onclick="window.open(\'' + escHtml(usaUrl) + '\', \'_blank\')"' : ''}>
                         <div class="card-top">
                             <div>
                                 <div class="card-agency">${escHtml(agency)}</div>

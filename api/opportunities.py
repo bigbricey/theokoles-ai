@@ -67,8 +67,10 @@ class handler(BaseHTTPRequestHandler):
             url = "https://sam.gov/api/prod/sgs/v1/search?" + urllib.parse.urlencode(params)
 
             req = urllib.request.Request(url, method="GET")
-            req.add_header("Accept", "application/json")
-            req.add_header("User-Agent", "GovContractFinder/1.0")
+            req.add_header("Accept", "application/json, text/plain, */*")
+            req.add_header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+            req.add_header("Referer", "https://sam.gov/search/")
+            req.add_header("Origin", "https://sam.gov")
 
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
