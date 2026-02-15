@@ -90,21 +90,22 @@ class handler(BaseHTTPRequestHandler):
                 descriptions = item.get("descriptions", [])
                 description_html = descriptions[0].get("content", "") if descriptions else ""
 
+                opp_id = item.get("_id", "")
+                notice_id = item.get("noticeId", opp_id)
                 results.append({
-                    "id": item.get("_id", ""),
+                    "id": opp_id,
                     "title": item.get("title", ""),
-                    "sol_number": item.get("solicitationNumber", ""),
+                    "solicitation_number": item.get("solicitationNumber", ""),
                     "department": safe_org(org_hierarchy, 0),
                     "agency": safe_org(org_hierarchy, 1),
                     "office": safe_org(org_hierarchy, 2),
-                    "type_code": opp_type_obj.get("code", ""),
-                    "type_value": opp_type_obj.get("value", ""),
+                    "type": opp_type_obj.get("value", ""),
                     "posted_date": item.get("postedDate", ""),
                     "modified_date": item.get("modifiedDate", ""),
-                    "response_deadline": item.get("responseDeadLine", ""),
+                    "response_date": item.get("responseDeadLine", ""),
                     "description": strip_html(description_html)[:500],
-                    "active": item.get("active", ""),
-                    "sam_url": f"https://sam.gov/opp/{item.get('_id', '')}/view",
+                    "is_active": item.get("active", "") == "Yes",
+                    "sam_url": f"https://sam.gov/opp/{notice_id}/view",
                 })
 
             result = {

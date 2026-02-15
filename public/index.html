@@ -1004,7 +1004,7 @@
                     </select>
                 </div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="activeOnly" checked>
+                    <input type="checkbox" id="activeOnly" checked aria-label="Active only">
                     <label for="activeOnly">Active only</label>
                 </div>
             </div>
@@ -1476,10 +1476,10 @@
                                 <span class="status-badge ${r.is_active ? 'status-active' : 'status-closed'}">
                                     ${r.is_active ? 'Active' : 'Closed'}
                                 </span>
-                                <span class="type-badge">${escHtml(r.type)}</span>
+                                ${r.type ? '<span class="type-badge">' + escHtml(r.type) + '</span>' : ''}
                             </div>
                         </div>
-                        ${r.description ? '<div class="card-desc">' + escHtml(r.description) + '</div>' : ''}
+                        ${r.description ? '<div class="card-desc">' + escHtml(decodeHtml(r.description)) + '</div>' : ''}
                         <div class="card-meta">
                             ${r.solicitation_number ? '<div class="meta-item"><strong>Sol #:</strong> ' + escHtml(r.solicitation_number) + '</div>' : ''}
                             <div class="meta-item"><strong>Posted:</strong> ${formatDate(r.posted_date)}</div>
