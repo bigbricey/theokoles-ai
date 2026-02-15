@@ -392,6 +392,24 @@
 
         .results-count strong { color: #00d4aa; font-weight: 700; }
 
+        .export-btn {
+            padding: 8px 20px;
+            background: #111927;
+            border: 1px solid #2a3a4d;
+            border-radius: 8px;
+            color: #00d4aa;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .export-btn:hover {
+            border-color: #00d4aa;
+            background: rgba(0, 212, 170, 0.08);
+        }
+
         /* ── Cards ─────────────────────────────────────────── */
         .card {
             background: linear-gradient(135deg, #111927 0%, #131d2d 100%);
@@ -1274,6 +1292,7 @@
         let oppPage = 0;
         let grantPage = 0;
         let awardPage = 1;
+        let lastResults = null;
 
         /* ─── Tab Switching ─────────────────────────────── */
         function switchTab(tab) {
@@ -1383,6 +1402,33 @@
             `;
         }
 
+        /* ─── CSV Export ───────────────────────────────── */
+        function csvEscape(val) {
+            if (val === null || val === undefined) return '';
+            const s = String(val);
+            if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+                return '"' + s.replace(/"/g, '""') + '"';
+            }
+            return s;
+        }
+
+        function exportResults() {
+            if (!lastResults || !lastResults.rows || lastResults.rows.length === 0) return;
+            const bom = '\uFEFF';
+            const header = lastResults.columns.map(csvEscape).join(',');
+            const rows = lastResults.rows.map(row => row.map(csvEscape).join(','));
+            const csv = bom + header + '\n' + rows.join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = lastResults.filename || 'export.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         function getDeadlineInfo(dateStr) {
             const days = daysUntil(dateStr);
             if (days === null) return { cls: '', text: '' };
@@ -1452,11 +1498,23 @@
                 return;
             }
 
+            lastResults = {
+                filename: 'opportunities.csv',
+                columns: ['Title', 'Department', 'Agency', 'Type', 'Status', 'Solicitation #', 'Posted Date', 'Deadline', 'Description', 'SAM.gov Link'],
+                rows: results.map(r => [
+                    r.title, r.department, r.agency, r.type,
+                    r.is_active ? 'Active' : 'Closed',
+                    r.solicitation_number, formatDate(r.posted_date),
+                    formatDate(r.response_date), decodeHtml(r.description), r.sam_url
+                ])
+            };
+
             let html = `
                 <div class="results-header">
                     <div class="results-count">
                         Found <strong>${Number(total).toLocaleString()}</strong> opportunities &mdash; Page ${page + 1}
                     </div>
+                    <button class="export-btn" onclick="exportResults()">&#128229; Export to Excel</button>
                 </div>
             `;
 
@@ -1544,11 +1602,22 @@
                 return;
             }
 
+            lastResults = {
+                filename: 'grants.csv',
+                columns: ['Title', 'Agency', 'Grant #', 'Status', 'Open Date', 'Close Date', 'Type', 'Grants.gov Link'],
+                rows: results.map(g => [
+                    decodeHtml(g.title), g.agency, g.number, g.status,
+                    formatDate(g.open_date), formatDate(g.close_date),
+                    g.doc_type, g.grants_url
+                ])
+            };
+
             let html = `
                 <div class="results-header">
                     <div class="results-count">
                         Found <strong>${Number(total).toLocaleString()}</strong> grants &mdash; Page ${page + 1}
                     </div>
+                    <button class="export-btn" onclick="exportResults()">&#128229; Export to Excel</button>
                 </div>
             `;
 
@@ -1634,11 +1703,26 @@
                 return;
             }
 
+            lastResults = {
+                filename: 'awarded_contracts.csv',
+                columns: ['Recipient', 'Agency', 'Amount', 'Description', 'Start Date', 'End Date', 'City', 'State', 'Award ID', 'USAspending Link'],
+                rows: results.map(r => {
+                    const id = r.internal_id || '';
+                    const usaUrl = id ? 'https://www.usaspending.gov/award/' + encodeURIComponent(id) : '';
+                    return [
+                        r.recipient, r.agency || r.sub_agency, r.amount,
+                        r.description, formatDate(r.start_date), formatDate(r.end_date),
+                        r.city, r.state, r.award_id, usaUrl
+                    ];
+                })
+            };
+
             let html = `
                 <div class="results-header">
                     <div class="results-count">
                         Found <strong>${typeof total === 'number' ? total.toLocaleString() : total}</strong> contracts &mdash; Page ${page}
                     </div>
+                    <button class="export-btn" onclick="exportResults()">&#128229; Export to Excel</button>
                 </div>
             `;
 
