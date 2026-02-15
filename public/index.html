@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GovContract Finder - Federal Contracts, Grants & Awards</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0e17;
+            color: #e0e6ed;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Header ────────────────────────────────────────── */
+        .header {
+            background: linear-gradient(135deg, #0d1220 0%, #131b2e 100%);
+            border-bottom: 1px solid #1a2536;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #00d4aa, #0099ff);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 900;
+            color: #0a0e17;
+            letter-spacing: -1px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo-text span { color: #00d4aa; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 212, 170, 0.08);
+            border: 1px solid rgba(0, 212, 170, 0.25);
+            color: #00d4aa;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            background: #00d4aa;
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0, 212, 170, 0); }
+        }
+
+        .header-tagline {
+            font-size: 13px;
+            color: #5a6a7d;
+            font-weight: 500;
+        }
+
+        /* ── Hero Section ──────────────────────────────────── */
+        .hero {
+            background: linear-gradient(180deg, #0d1220 0%, #0a0e17 100%);
+            padding: 56px 32px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(0, 212, 170, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 44px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h1 .accent { color: #00d4aa; }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: #7a8ba0;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .hero-stat-value .teal { color: #00d4aa; }
+        .hero-stat-value .blue { color: #0099ff; }
+
+        .hero-stat-label {
+            font-size: 13px;
+            color: #5a6a7d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-divider {
+            width: 1px;
+            background: #1e2d3d;
+            align-self: stretch;
+        }
+
+        /* ── Main Container ────────────────────────────────── */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px 32px;
+        }
+
+        /* ── Tabs ──────────────────────────────────────────── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 28px;
+            background: #111927;
+            border-radius: 14px;
+            padding: 5px;
+            border: 1px solid #1a2536;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            color: #5a6a7d;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .tab:hover { color: #8a9ab0; background: rgba(255, 255, 255, 0.02); }
+
+        .tab.active {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(0, 153, 255, 0.06));
+            color: #00d4aa;
+            border-color: rgba(0, 212, 170, 0.25);
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.05);
+        }
+
+        .tab-desc {
+            font-size: 11px;
+            font-weight: 400;
+            color: #4a5a6d;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .tab.active .tab-desc { color: rgba(0, 212, 170, 0.6); }
+
+        /* ── Search Section ────────────────────────────────── */
+        .search-section {
+            background: linear-gradient(135deg, #111927 0%, #141e30 100%);
+            border: 1px solid #1a2536;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+        }
+
+        .search-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .search-subtitle {
+            color: #7a8ba0;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 20px;
+            background: #0a0e17;
+            border: 1px solid #2a3a4d;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+
+        .search-input::placeholder { color: #4a5a6d; }
+
+        .search-btn {
+            padding: 14px 36px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            border: none;
+            border-radius: 10px;
+            color: #0a0e17;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.15s, opacity 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+        }
+
+        .search-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 212, 170, 0.25);
+        }
+
+        .search-btn:active { transform: translateY(0); box-shadow: none; }
+        .search-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .filters {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            color: #5a6a7d;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 10px 14px;
+            background: #0a0e17;
+            border: 1px solid #2a3a4d;
+            border-radius: 8px;
+            color: #e0e6ed;
+            font-size: 13px;
+            outline: none;
+            min-width: 170px;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus, .filter-input:focus { border-color: #00d4aa; }
+        .filter-input { width: 140px; min-width: unset; }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 2px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #00d4aa;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 13px;
+            color: #8a9ab0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* ── Results ───────────────────────────────────────── */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: #7a8ba0;
+        }
+
+        .results-count strong { color: #00d4aa; font-weight: 700; }
+
+        /* ── Cards ─────────────────────────────────────────── */
+        .card {
+            background: linear-gradient(135deg, #111927 0%, #131d2d 100%);
+            border: 1px solid #1a2536;
+            border-radius: 14px;
+            padding: 24px 28px;
+            margin-bottom: 12px;
+            transition: border-color 0.25s, transform 0.15s, box-shadow 0.25s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 212, 170, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 212, 170, 0.1);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 16px;
+        }
+
+        .card-agency {
+            font-size: 12px;
+            color: #0099ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .card-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00d4aa;
+            white-space: nowrap;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.4;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #7a8ba0;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            font-size: 13px;
+            color: #5a6a7d;
+        }
+
+        .meta-item strong {
+            color: #8a9ab0;
+            font-weight: 600;
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        /* ── Badges ────────────────────────────────────────── */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: rgba(0, 212, 170, 0.12);
+            color: #00d4aa;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .status-closed {
+            background: rgba(255, 107, 107, 0.12);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.25);
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(0, 153, 255, 0.1);
+            color: #4db8ff;
+            border: 1px solid rgba(0, 153, 255, 0.2);
+            white-space: nowrap;
+        }
+
+        /* Grant status badges */
+        .grant-posted {
+            background: rgba(0, 212, 170, 0.12);
+            color: #00d4aa;
+            border: 1px solid rgba(0, 212, 170, 0.3);
+        }
+
+        .grant-forecasted {
+            background: rgba(0, 153, 255, 0.12);
+            color: #4db8ff;
+            border: 1px solid rgba(0, 153, 255, 0.25);
+        }
+
+        .grant-closed {
+            background: rgba(255, 107, 107, 0.12);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.25);
+        }
+
+        .grant-archived {
+            background: rgba(120, 130, 150, 0.12);
+            color: #7a8ba0;
+            border: 1px solid rgba(120, 130, 150, 0.25);
+        }
+
+        /* ── Deadline urgency ──────────────────────────────── */
+        .deadline-soon {
+            color: #ffaa00 !important;
+            font-weight: 600;
+        }
+
+        .deadline-soon strong { color: #ffaa00 !important; }
+
+        .deadline-urgent {
+            color: #ff6b6b !important;
+            font-weight: 700;
+        }
+
+        .deadline-urgent strong { color: #ff6b6b !important; }
+
+        /* ── Pagination ────────────────────────────────────── */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 28px;
+            padding-bottom: 8px;
+        }
+
+        .page-btn {
+            padding: 12px 28px;
+            background: #111927;
+            border: 1px solid #2a3a4d;
+            border-radius: 10px;
+            color: #e0e6ed;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover {
+            border-color: #00d4aa;
+            color: #00d4aa;
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* ── Detail Modal ──────────────────────────────────── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 24px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: #111927;
+            border: 1px solid #2a3a4d;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            padding: 36px;
+            position: relative;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 20px;
+            background: #1a2536;
+            border: 1px solid #2a3a4d;
+            color: #7a8ba0;
+            font-size: 20px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover { color: #fff; border-color: #5a6a7d; }
+
+        .modal h2 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 8px;
+            padding-right: 48px;
+            line-height: 1.3;
+        }
+
+        .modal-agency {
+            color: #0099ff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            background: #0a0e17;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #1a2536;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #5a6a7d;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e0e6ed;
+        }
+
+        .detail-value.highlight {
+            color: #00d4aa;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .detail-desc {
+            background: #0a0e17;
+            border: 1px solid #1a2536;
+            border-radius: 10px;
+            padding: 20px;
+            color: #8a9ab0;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        /* ── Loading ───────────────────────────────────────── */
+        .loading {
+            text-align: center;
+            padding: 80px 0;
+            color: #5a6a7d;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border: 3px solid #1e2d3d;
+            border-top-color: #00d4aa;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Empty State ───────────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 80px 0;
+            color: #4a5a6d;
+        }
+
+        .empty-state .empty-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            background: #111927;
+            border: 1px solid #1a2536;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .empty-state h3 {
+            color: #7a8ba0;
+            margin-bottom: 8px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .empty-state p {
+            color: #5a6a7d;
+            font-size: 14px;
+        }
+
+        /* ── Error State ───────────────────────────────────── */
+        .error-state {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .error-state .error-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            background: rgba(255, 107, 107, 0.08);
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .error-state h3 {
+            color: #ff6b6b;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .error-state p {
+            color: #5a6a7d;
+            font-size: 14px;
+        }
+
+        /* ── Footer ────────────────────────────────────────── */
+        .footer {
+            border-top: 1px solid #141c2a;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .footer-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .footer-brand {
+            font-size: 13px;
+            color: #3a4a5d;
+            margin-bottom: 8px;
+        }
+
+        .footer-brand a {
+            color: #5a6a7d;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-brand a:hover { color: #7a8ba0; }
+
+        .footer-sources {
+            font-size: 12px;
+            color: #2d3a4d;
+        }
+
+        .footer-sources a {
+            color: #3a4a5d;
+            text-decoration: none;
+        }
+
+        .footer-sources a:hover { color: #5a6a7d; }
+
+        /* ── Responsive ────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 28px; }
+            .hero { padding: 36px 20px 32px; }
+            .hero-stats { gap: 24px; }
+            .hero-stat-value { font-size: 28px; }
+            .hero-divider { display: none; }
+            .header-inner { padding: 0 16px; }
+            .header-tagline { display: none; }
+            .container { padding: 0 16px 24px; }
+            .search-section { padding: 20px; }
+            .search-bar { flex-direction: column; }
+            .search-btn { width: 100%; }
+            .filters { flex-direction: column; }
+            .filter-group { width: 100%; }
+            .filter-select, .filter-input { width: 100%; min-width: unset; }
+            .detail-grid { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+            .card-top { flex-direction: column; gap: 12px; }
+            .card-badges { order: -1; }
+            .tabs { flex-direction: column; gap: 4px; }
+            .tab { padding: 12px 16px; }
+            .modal { padding: 24px; margin: 20px; }
+            .modal-overlay { padding: 20px 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 24px; }
+            .hero-subtitle { font-size: 15px; }
+            .hero-stats { flex-direction: column; gap: 20px; }
+            .logo-text { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ────────────────────────────────────────── -->
+    <div class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">GC</div>
+                <div class="logo-text">Gov<span>Contract</span> Finder</div>
+            </div>
+            <div class="header-right">
+                <span class="header-tagline">Federal Contracts, Grants &amp; Awards</span>
+                <div class="live-badge">
+                    <div class="live-dot"></div>
+                    Live Data
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Hero Section ──────────────────────────────────── -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Find Government Contracts<br>&amp; Grants <span class="accent">in Seconds</span></h1>
+            <p class="hero-subtitle">
+                Search open opportunities, federal grants, and awarded contracts across
+                three official government databases &mdash; all in one place.
+            </p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value"><span class="teal">1.6M+</span></div>
+                    <div class="hero-stat-label">Opportunities</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value"><span class="blue">3</span></div>
+                    <div class="hero-stat-label">Federal Databases</div>
+                </div>
+                <div class="hero-divider"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value"><span class="teal">$500B+</span></div>
+                    <div class="hero-stat-label">In Awards</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Main Content ──────────────────────────────────── -->
+    <div class="container">
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('opportunities')" data-tab="opportunities">
+                Open Opportunities
+                <span class="tab-desc">Contracts to bid on &bull; SAM.gov</span>
+            </button>
+            <button class="tab" onclick="switchTab('grants')" data-tab="grants">
+                Federal Grants
+                <span class="tab-desc">Grant funding &bull; Grants.gov</span>
+            </button>
+            <button class="tab" onclick="switchTab('awarded')" data-tab="awarded">
+                Awarded Contracts
+                <span class="tab-desc">Who won &bull; USAspending.gov</span>
+            </button>
+        </div>
+
+        <!-- ── Tab 1: Open Opportunities (SAM.gov) ──────── -->
+        <div class="search-section" id="oppSearch">
+            <div class="search-title">Find Open Opportunities</div>
+            <div class="search-subtitle">
+                Search active federal contract opportunities from SAM.gov &mdash; find solicitations, presolicitations, and more to bid on right now.
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="oppKeyword"
+                       placeholder="Search opportunities... (e.g., IT services, cybersecurity, construction)" autofocus>
+                <button class="search-btn" id="oppSearchBtn" onclick="searchOpportunities()">Search</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Opportunity Type</span>
+                    <select class="filter-select" id="oppType">
+                        <option value="">All Types</option>
+                        
+                        <option value="o">Solicitation</option>
+                        
+                        <option value="p">Presolicitation</option>
+                        
+                        <option value="r">Sources Sought</option>
+                        
+                        <option value="s">Special Notice</option>
+                        
+                        <option value="k">Combined Synopsis/Solicitation</option>
+                        
+                        <option value="i">Intent to Bundle</option>
+                        
+                        <option value="a">Award Notice</option>
+                        
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">NAICS Code</span>
+                    <select class="filter-select" id="oppNaics">
+                        <option value="">All Industries</option>
+                        
+                        <option value="236220">236220 - Commercial Building Construction</option>
+                        
+                        <option value="237310">237310 - Highway/Street Construction</option>
+                        
+                        <option value="238210">238210 - Electrical Contractors</option>
+                        
+                        <option value="238220">238220 - Plumbing/HVAC Contractors</option>
+                        
+                        <option value="334111">334111 - Electronic Computer Manufacturing</option>
+                        
+                        <option value="334118">334118 - Computer Terminal Manufacturing</option>
+                        
+                        <option value="423430">423430 - Computer Equipment Wholesalers</option>
+                        
+                        <option value="511210">511210 - Software Publishers</option>
+                        
+                        <option value="517312">517312 - Wireless Telecommunications</option>
+                        
+                        <option value="518210">518210 - Data Processing/Hosting</option>
+                        
+                        <option value="541330">541330 - Engineering Services</option>
+                        
+                        <option value="541511">541511 - Custom Computer Programming</option>
+                        
+                        <option value="541512">541512 - Computer Systems Design</option>
+                        
+                        <option value="541513">541513 - Computer Facilities Management</option>
+                        
+                        <option value="541519">541519 - Other Computer Related Services</option>
+                        
+                        <option value="541611">541611 - Admin Management Consulting</option>
+                        
+                        <option value="541612">541612 - Human Resources Consulting</option>
+                        
+                        <option value="541613">541613 - Marketing Consulting</option>
+                        
+                        <option value="541614">541614 - Process/Logistics Consulting</option>
+                        
+                        <option value="541618">541618 - Other Management Consulting</option>
+                        
+                        <option value="541690">541690 - Other Scientific/Technical Consulting</option>
+                        
+                        <option value="561210">561210 - Facilities Support Services</option>
+                        
+                        <option value="561612">561612 - Security Guards/Patrol Services</option>
+                        
+                        <option value="561621">561621 - Security Systems Services</option>
+                        
+                        <option value="611430">611430 - Professional Development Training</option>
+                        
+                        <option value="621511">621511 - Medical Laboratories</option>
+                        
+                        <option value="621999">621999 - Miscellaneous Health Services</option>
+                        
+                        <option value="928110">928110 - National Security</option>
+                        
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="activeOnly" checked>
+                    <label for="activeOnly">Active only</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Tab 2: Federal Grants (Grants.gov) ───────── -->
+        <div class="search-section" id="grantSearch" style="display:none">
+            <div class="search-title">Find Federal Grants</div>
+            <div class="search-subtitle">
+                Search federal grant funding opportunities from Grants.gov &mdash; find posted, forecasted, and archived grants across all agencies.
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="grantKeyword"
+                       placeholder="Search grants... (e.g., STEM education, climate research, community health)">
+                <button class="search-btn" id="grantSearchBtn" onclick="searchGrants()">Search</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Status</span>
+                    <select class="filter-select" id="grantStatus">
+                        <option value="posted">Posted (Open)</option>
+                        <option value="forecasted">Forecasted</option>
+                        <option value="closed">Closed</option>
+                        <option value="archived">Archived</option>
+                        <option value="">All Statuses</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Tab 3: Awarded Contracts (USAspending.gov) ── -->
+        <div class="search-section" id="awardSearch" style="display:none">
+            <div class="search-title">Search Awarded Contracts</div>
+            <div class="search-subtitle">
+                See who won federal contracts with real award data from USAspending.gov (2024&ndash;2026). Explore recipients, amounts, and locations.
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="awardKeyword"
+                       placeholder="Search awarded contracts... (e.g., IT services, cybersecurity, construction)">
+                <button class="search-btn" id="awardSearchBtn" onclick="searchAwarded()">Search</button>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">State</span>
+                    <select class="filter-select" id="awardState">
+                        <option value="">All States</option>
+                        
+                        <option value="AL">Alabama</option>
+                        
+                        <option value="AK">Alaska</option>
+                        
+                        <option value="AZ">Arizona</option>
+                        
+                        <option value="AR">Arkansas</option>
+                        
+                        <option value="CA">California</option>
+                        
+                        <option value="CO">Colorado</option>
+                        
+                        <option value="CT">Connecticut</option>
+                        
+                        <option value="DE">Delaware</option>
+                        
+                        <option value="DC">District of Columbia</option>
+                        
+                        <option value="FL">Florida</option>
+                        
+                        <option value="GA">Georgia</option>
+                        
+                        <option value="HI">Hawaii</option>
+                        
+                        <option value="ID">Idaho</option>
+                        
+                        <option value="IL">Illinois</option>
+                        
+                        <option value="IN">Indiana</option>
+                        
+                        <option value="IA">Iowa</option>
+                        
+                        <option value="KS">Kansas</option>
+                        
+                        <option value="KY">Kentucky</option>
+                        
+                        <option value="LA">Louisiana</option>
+                        
+                        <option value="ME">Maine</option>
+                        
+                        <option value="MD">Maryland</option>
+                        
+                        <option value="MA">Massachusetts</option>
+                        
+                        <option value="MI">Michigan</option>
+                        
+                        <option value="MN">Minnesota</option>
+                        
+                        <option value="MS">Mississippi</option>
+                        
+                        <option value="MO">Missouri</option>
+                        
+                        <option value="MT">Montana</option>
+                        
+                        <option value="NE">Nebraska</option>
+                        
+                        <option value="NV">Nevada</option>
+                        
+                        <option value="NH">New Hampshire</option>
+                        
+                        <option value="NJ">New Jersey</option>
+                        
+                        <option value="NM">New Mexico</option>
+                        
+                        <option value="NY">New York</option>
+                        
+                        <option value="NC">North Carolina</option>
+                        
+                        <option value="ND">North Dakota</option>
+                        
+                        <option value="OH">Ohio</option>
+                        
+                        <option value="OK">Oklahoma</option>
+                        
+                        <option value="OR">Oregon</option>
+                        
+                        <option value="PA">Pennsylvania</option>
+                        
+                        <option value="RI">Rhode Island</option>
+                        
+                        <option value="SC">South Carolina</option>
+                        
+                        <option value="SD">South Dakota</option>
+                        
+                        <option value="TN">Tennessee</option>
+                        
+                        <option value="TX">Texas</option>
+                        
+                        <option value="UT">Utah</option>
+                        
+                        <option value="VT">Vermont</option>
+                        
+                        <option value="VA">Virginia</option>
+                        
+                        <option value="WA">Washington</option>
+                        
+                        <option value="WV">West Virginia</option>
+                        
+                        <option value="WI">Wisconsin</option>
+                        
+                        <option value="WY">Wyoming</option>
+                        
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">NAICS Code</span>
+                    <select class="filter-select" id="awardNaics">
+                        <option value="">All Industries</option>
+                        
+                        <option value="236220">236220 - Commercial Building Construction</option>
+                        
+                        <option value="237310">237310 - Highway/Street Construction</option>
+                        
+                        <option value="238210">238210 - Electrical Contractors</option>
+                        
+                        <option value="238220">238220 - Plumbing/HVAC Contractors</option>
+                        
+                        <option value="334111">334111 - Electronic Computer Manufacturing</option>
+                        
+                        <option value="334118">334118 - Computer Terminal Manufacturing</option>
+                        
+                        <option value="423430">423430 - Computer Equipment Wholesalers</option>
+                        
+                        <option value="511210">511210 - Software Publishers</option>
+                        
+                        <option value="517312">517312 - Wireless Telecommunications</option>
+                        
+                        <option value="518210">518210 - Data Processing/Hosting</option>
+                        
+                        <option value="541330">541330 - Engineering Services</option>
+                        
+                        <option value="541511">541511 - Custom Computer Programming</option>
+                        
+                        <option value="541512">541512 - Computer Systems Design</option>
+                        
+                        <option value="541513">541513 - Computer Facilities Management</option>
+                        
+                        <option value="541519">541519 - Other Computer Related Services</option>
+                        
+                        <option value="541611">541611 - Admin Management Consulting</option>
+                        
+                        <option value="541612">541612 - Human Resources Consulting</option>
+                        
+                        <option value="541613">541613 - Marketing Consulting</option>
+                        
+                        <option value="541614">541614 - Process/Logistics Consulting</option>
+                        
+                        <option value="541618">541618 - Other Management Consulting</option>
+                        
+                        <option value="541690">541690 - Other Scientific/Technical Consulting</option>
+                        
+                        <option value="561210">561210 - Facilities Support Services</option>
+                        
+                        <option value="561612">561612 - Security Guards/Patrol Services</option>
+                        
+                        <option value="561621">561621 - Security Systems Services</option>
+                        
+                        <option value="611430">611430 - Professional Development Training</option>
+                        
+                        <option value="621511">621511 - Medical Laboratories</option>
+                        
+                        <option value="621999">621999 - Miscellaneous Health Services</option>
+                        
+                        <option value="928110">928110 - National Security</option>
+                        
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Min Amount ($)</span>
+                    <input type="number" class="filter-input" id="minAmount" placeholder="0">
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Max Amount ($)</span>
+                    <input type="number" class="filter-input" id="maxAmount" placeholder="No limit">
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Results Area ────────────────────────────────── -->
+        <div id="resultsArea">
+            <div class="empty-state">
+                <div class="empty-icon">&#128269;</div>
+                <h3>Search for government opportunities</h3>
+                <p>Find contracts to bid on, federal grants, or see who won past awards</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── Detail Modal ──────────────────────────────────── -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" id="modalContent">
+            <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('active')">&times;</button>
+            <div id="modalBody">Loading...</div>
+        </div>
+    </div>
+
+    <!-- ── Footer ────────────────────────────────────────── -->
+    <div class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                Built with <a href="https://claude.ai" target="_blank">Claude Code</a>
+            </div>
+            <div class="footer-sources">
+                Data from
+                <a href="https://sam.gov" target="_blank">SAM.gov</a> &bull;
+                <a href="https://grants.gov" target="_blank">Grants.gov</a> &bull;
+                <a href="https://usaspending.gov" target="_blank">USAspending.gov</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ─── State ─────────────────────────────────────── */
+        let currentTab = 'opportunities';
+        let oppPage = 0;
+        let grantPage = 0;
+        let awardPage = 1;
+
+        /* ─── Tab Switching ─────────────────────────────── */
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tab);
+            });
+
+            document.getElementById('oppSearch').style.display = tab === 'opportunities' ? 'block' : 'none';
+            document.getElementById('grantSearch').style.display = tab === 'grants' ? 'block' : 'none';
+            document.getElementById('awardSearch').style.display = tab === 'awarded' ? 'block' : 'none';
+
+            const messages = {
+                opportunities: { title: 'Search for open contract opportunities', desc: 'Find federal contracts to bid on from SAM.gov' },
+                grants: { title: 'Search for federal grant opportunities', desc: 'Find grant funding from Grants.gov' },
+                awarded: { title: 'Search for awarded contracts', desc: 'See who won federal contracts from USAspending.gov' },
+            };
+
+            const m = messages[tab];
+            document.getElementById('resultsArea').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">&#128269;</div>
+                    <h3>${m.title}</h3>
+                    <p>${m.desc}</p>
+                </div>
+            `;
+
+            // Focus the search input for the active tab
+            const inputIds = { opportunities: 'oppKeyword', grants: 'grantKeyword', awarded: 'awardKeyword' };
+            const input = document.getElementById(inputIds[tab]);
+            if (input) setTimeout(() => input.focus(), 100);
+        }
+
+        /* ─── Enter Key Handlers ────────────────────────── */
+        document.getElementById('oppKeyword').addEventListener('keydown', e => { if (e.key === 'Enter') searchOpportunities(); });
+        document.getElementById('grantKeyword').addEventListener('keydown', e => { if (e.key === 'Enter') searchGrants(); });
+        document.getElementById('awardKeyword').addEventListener('keydown', e => { if (e.key === 'Enter') searchAwarded(); });
+
+        /* ─── Formatting Helpers ────────────────────────── */
+        function formatCurrency(amount) {
+            if (amount === null || amount === undefined) return 'N/A';
+            const num = Number(amount);
+            if (isNaN(num)) return 'N/A';
+            if (Math.abs(num) >= 1e9) return '$' + (num / 1e9).toFixed(1) + 'B';
+            if (Math.abs(num) >= 1e6) return '$' + (num / 1e6).toFixed(1) + 'M';
+            if (Math.abs(num) >= 1e3) return '$' + (num / 1e3).toFixed(1) + 'K';
+            return '$' + num.toLocaleString();
+        }
+
+        function formatFullCurrency(amount) {
+            if (amount === null || amount === undefined) return 'N/A';
+            return '$' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function daysUntil(dateStr) {
+            if (!dateStr) return null;
+            const d = new Date(dateStr);
+            if (isNaN(d)) return null;
+            const now = new Date();
+            return Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+        }
+
+        function escHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showLoading(message) {
+            document.getElementById('resultsArea').innerHTML = `
+                <div class="loading"><div class="spinner"></div><div>${escHtml(message)}</div></div>
+            `;
+        }
+
+        function showError(title, detail) {
+            document.getElementById('resultsArea').innerHTML = `
+                <div class="error-state">
+                    <div class="error-icon">&#9888;&#65039;</div>
+                    <h3>${escHtml(title)}</h3>
+                    ${detail ? '<p>' + escHtml(detail) + '</p>' : ''}
+                </div>
+            `;
+        }
+
+        function showEmpty(message, hint) {
+            document.getElementById('resultsArea').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">&#128269;</div>
+                    <h3>${escHtml(message)}</h3>
+                    <p>${escHtml(hint)}</p>
+                </div>
+            `;
+        }
+
+        function getDeadlineInfo(dateStr) {
+            const days = daysUntil(dateStr);
+            if (days === null) return { cls: '', text: '' };
+            if (days < 0) return { cls: 'deadline-urgent', text: 'Deadline passed' };
+            if (days === 0) return { cls: 'deadline-urgent', text: 'Due today!' };
+            if (days <= 3) return { cls: 'deadline-urgent', text: days + ' day' + (days > 1 ? 's' : '') + ' left' };
+            if (days <= 14) return { cls: 'deadline-soon', text: days + ' days left' };
+            return { cls: '', text: '' };
+        }
+
+        function getGrantStatusBadge(status) {
+            if (!status) return '';
+            const s = status.toLowerCase();
+            if (s === 'posted') return '<span class="status-badge grant-posted">Posted</span>';
+            if (s === 'forecasted') return '<span class="status-badge grant-forecasted">Forecasted</span>';
+            if (s === 'closed') return '<span class="status-badge grant-closed">Closed</span>';
+            if (s === 'archived') return '<span class="status-badge grant-archived">Archived</span>';
+            return '<span class="status-badge grant-archived">' + escHtml(status) + '</span>';
+        }
+
+        /* ─────────────────────────────────────────────────
+           SAM.gov Open Opportunities
+           ───────────────────────────────────────────────── */
+        async function searchOpportunities(page = 0) {
+            const keyword = document.getElementById('oppKeyword').value.trim();
+            if (!keyword) { document.getElementById('oppKeyword').focus(); return; }
+
+            oppPage = page;
+            const btn = document.getElementById('oppSearchBtn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+            showLoading('Searching SAM.gov opportunities...');
+
+            try {
+                const resp = await fetch('/api/opportunities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        keyword,
+                        opp_type: document.getElementById('oppType').value,
+                        active_only: document.getElementById('activeOnly').checked,
+                        naics: document.getElementById('oppNaics').value,
+                        page,
+                    })
+                });
+
+                const data = await resp.json();
+                if (data.error) { showError(data.error); return; }
+                renderOpportunities(data);
+            } catch (err) {
+                showError('Something went wrong', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+            }
+        }
+
+        function renderOpportunities(data) {
+            const { results, total, page, has_next } = data;
+
+            if (!results || results.length === 0) {
+                showEmpty('No opportunities found', 'Try different keywords or broader filters');
+                return;
+            }
+
+            let html = `
+                <div class="results-header">
+                    <div class="results-count">
+                        Found <strong>${Number(total).toLocaleString()}</strong> opportunities &mdash; Page ${page + 1}
+                    </div>
+                </div>
+            `;
+
+            for (const r of results) {
+                const dl = getDeadlineInfo(r.response_date);
+
+                html += `
+                    <div class="card" onclick="window.open('${escHtml(r.sam_url)}', '_blank')">
+                        <div class="card-top">
+                            <div>
+                                <div class="card-agency">
+                                    ${escHtml(r.department)}${r.agency ? ' &bull; ' + escHtml(r.agency) : ''}
+                                </div>
+                                <div class="card-title">${escHtml(r.title)}</div>
+                            </div>
+                            <div class="card-badges">
+                                <span class="status-badge ${r.is_active ? 'status-active' : 'status-closed'}">
+                                    ${r.is_active ? 'Active' : 'Closed'}
+                                </span>
+                                <span class="type-badge">${escHtml(r.type)}</span>
+                            </div>
+                        </div>
+                        ${r.description ? '<div class="card-desc">' + escHtml(r.description) + '</div>' : ''}
+                        <div class="card-meta">
+                            ${r.solicitation_number ? '<div class="meta-item"><strong>Sol #:</strong> ' + escHtml(r.solicitation_number) + '</div>' : ''}
+                            <div class="meta-item"><strong>Posted:</strong> ${formatDate(r.posted_date)}</div>
+                            ${r.response_date ? '<div class="meta-item ' + dl.cls + '"><strong>Deadline:</strong> ' + formatDate(r.response_date) + (dl.text ? ' (' + dl.text + ')' : '') + '</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '<div class="pagination">';
+            if (page > 0) html += '<button class="page-btn" onclick="searchOpportunities(' + (page - 1) + ')">&#8592; Previous</button>';
+            if (has_next) html += '<button class="page-btn" onclick="searchOpportunities(' + (page + 1) + ')">Next &#8594;</button>';
+            html += '</div>';
+
+            document.getElementById('resultsArea').innerHTML = html;
+        }
+
+        /* ─────────────────────────────────────────────────
+           Grants.gov Federal Grants
+           ───────────────────────────────────────────────── */
+        async function searchGrants(page = 0) {
+            const keyword = document.getElementById('grantKeyword').value.trim();
+            if (!keyword) { document.getElementById('grantKeyword').focus(); return; }
+
+            grantPage = page;
+            const btn = document.getElementById('grantSearchBtn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+            showLoading('Searching Grants.gov opportunities...');
+
+            try {
+                const resp = await fetch('/api/grants', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        keyword,
+                        status: document.getElementById('grantStatus').value,
+                        page,
+                    })
+                });
+
+                const data = await resp.json();
+                if (data.error) { showError(data.error); return; }
+                renderGrants(data);
+            } catch (err) {
+                showError('Something went wrong', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+            }
+        }
+
+        function renderGrants(data) {
+            const { results, total, page, has_next } = data;
+
+            if (!results || results.length === 0) {
+                showEmpty('No grants found', 'Try different keywords or a different status filter');
+                return;
+            }
+
+            let html = `
+                <div class="results-header">
+                    <div class="results-count">
+                        Found <strong>${Number(total).toLocaleString()}</strong> grants &mdash; Page ${page + 1}
+                    </div>
+                </div>
+            `;
+
+            for (const g of results) {
+                const closeDl = getDeadlineInfo(g.close_date);
+
+                html += `
+                    <div class="card" onclick="window.open('${escHtml(g.grants_url)}', '_blank')">
+                        <div class="card-top">
+                            <div>
+                                <div class="card-agency">${escHtml(g.agency)}</div>
+                                <div class="card-title">${escHtml(g.title)}</div>
+                            </div>
+                            <div class="card-badges">
+                                ${getGrantStatusBadge(g.status)}
+                            </div>
+                        </div>
+                        <div class="card-meta">
+                            ${g.number ? '<div class="meta-item"><strong>Grant #:</strong> ' + escHtml(g.number) + '</div>' : ''}
+                            ${g.open_date ? '<div class="meta-item"><strong>Open:</strong> ' + formatDate(g.open_date) + '</div>' : ''}
+                            ${g.close_date ? '<div class="meta-item ' + closeDl.cls + '"><strong>Close:</strong> ' + formatDate(g.close_date) + (closeDl.text ? ' (' + closeDl.text + ')' : '') + '</div>' : ''}
+                            ${g.doc_type ? '<div class="meta-item"><strong>Type:</strong> ' + escHtml(g.doc_type) + '</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '<div class="pagination">';
+            if (page > 0) html += '<button class="page-btn" onclick="searchGrants(' + (page - 1) + ')">&#8592; Previous</button>';
+            if (has_next) html += '<button class="page-btn" onclick="searchGrants(' + (page + 1) + ')">Next &#8594;</button>';
+            html += '</div>';
+
+            document.getElementById('resultsArea').innerHTML = html;
+        }
+
+        /* ─────────────────────────────────────────────────
+           USAspending.gov Awarded Contracts
+           ───────────────────────────────────────────────── */
+        async function searchAwarded(page = 1) {
+            const keyword = document.getElementById('awardKeyword').value.trim();
+            if (!keyword) { document.getElementById('awardKeyword').focus(); return; }
+
+            awardPage = page;
+            const btn = document.getElementById('awardSearchBtn');
+            btn.disabled = true;
+            btn.textContent = 'Searching...';
+            showLoading('Searching federal contract awards...');
+
+            try {
+                const resp = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        keyword,
+                        state: document.getElementById('awardState').value,
+                        naics: document.getElementById('awardNaics').value,
+                        min_amount: document.getElementById('minAmount').value,
+                        max_amount: document.getElementById('maxAmount').value,
+                        page,
+                    })
+                });
+
+                const data = await resp.json();
+                if (data.error) { showError(data.error); return; }
+                renderAwarded(data);
+            } catch (err) {
+                showError('Something went wrong', err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Search';
+            }
+        }
+
+        function renderAwarded(data) {
+            const { results, total, page, has_next } = data;
+
+            if (!results || results.length === 0) {
+                showEmpty('No contracts found', 'Try different keywords or broader filters');
+                return;
+            }
+
+            let html = `
+                <div class="results-header">
+                    <div class="results-count">
+                        Found <strong>${typeof total === 'number' ? total.toLocaleString() : total}</strong> contracts &mdash; Page ${page}
+                    </div>
+                </div>
+            `;
+
+            for (const r of results) {
+                const id = r['generated_internal_id'] || '';
+                const agency = r['Awarding Agency'] || r['Awarding Sub Agency'] || 'Unknown Agency';
+                const recipient = r['Recipient Name'] || 'Unknown Recipient';
+                const amount = r['Award Amount'];
+                const desc = r['Description'] || 'No description available';
+                const startDate = r['Start Date'];
+                const endDate = r['End Date'];
+                const stateCode = r['Place of Performance State Code'] || '';
+                const city = r['Place of Performance City'] || '';
+                const location = [city, stateCode].filter(Boolean).join(', ');
+                const awardId = r['Award ID'] || '';
+
+                html += `
+                    <div class="card" onclick="showAwardDetail('${escHtml(id)}')">
+                        <div class="card-top">
+                            <div>
+                                <div class="card-agency">${escHtml(agency)}</div>
+                                <div class="card-title">${escHtml(recipient)}</div>
+                            </div>
+                            <div class="card-amount">${formatCurrency(amount)}</div>
+                        </div>
+                        <div class="card-desc">${escHtml(desc)}</div>
+                        <div class="card-meta">
+                            ${startDate ? '<div class="meta-item"><strong>Start:</strong> ' + formatDate(startDate) + '</div>' : ''}
+                            ${endDate ? '<div class="meta-item"><strong>End:</strong> ' + formatDate(endDate) + '</div>' : ''}
+                            ${location ? '<div class="meta-item"><strong>Location:</strong> ' + escHtml(location) + '</div>' : ''}
+                            ${awardId ? '<div class="meta-item"><strong>Award ID:</strong> ' + escHtml(awardId) + '</div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '<div class="pagination">';
+            if (page > 1) html += '<button class="page-btn" onclick="searchAwarded(' + (page - 1) + ')">&#8592; Previous</button>';
+            if (has_next) html += '<button class="page-btn" onclick="searchAwarded(' + (page + 1) + ')">Next &#8594;</button>';
+            html += '</div>';
+
+            document.getElementById('resultsArea').innerHTML = html;
+        }
+
+        /* ─────────────────────────────────────────────────
+           Award Detail Modal
+           ───────────────────────────────────────────────── */
+        async function showAwardDetail(internalId) {
+            if (!internalId) return;
+            const overlay = document.getElementById('modalOverlay');
+            const body = document.getElementById('modalBody');
+            overlay.classList.add('active');
+            body.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading contract details...</div></div>';
+
+            try {
+                const resp = await fetch('/api/contract?id=' + internalId);
+                const data = await resp.json();
+
+                if (data.error) {
+                    body.innerHTML = '<div class="error-state"><h3>' + escHtml(data.error) + '</h3></div>';
+                    return;
+                }
+
+                const award = data;
+                const recipient = (award.recipient && award.recipient.recipient_name) || 'Unknown';
+                const agency = (award.awarding_agency && award.awarding_agency.toptier_agency && award.awarding_agency.toptier_agency.name) || 'Unknown Agency';
+                const subAgency = (award.awarding_agency && award.awarding_agency.subtier_agency && award.awarding_agency.subtier_agency.name) || '';
+                const amount = award.total_obligation || award.base_and_all_options_value;
+                const desc = award.description || 'No description available';
+                const startDate = award.period_of_performance ? award.period_of_performance.start_date : null;
+                const endDate = award.period_of_performance ? award.period_of_performance.end_date : null;
+                const pop = award.place_of_performance || {};
+                const location = [pop.city_name, pop.state_code, pop.country_name].filter(Boolean).join(', ');
+                const lcd = award.latest_transaction_contract_data || {};
+                const naics = lcd.naics || '';
+                const naicsDesc = lcd.naics_description || '';
+                const psc = lcd.product_or_service_code || '';
+                const pscDesc = lcd.product_or_service_code_description || '';
+                const awardId = award.piid || award.fain || award.uri || '';
+
+                body.innerHTML = `
+                    <h2>${escHtml(recipient)}</h2>
+                    <div class="modal-agency">${escHtml(agency)}${subAgency ? ' &bull; ' + escHtml(subAgency) : ''}</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Award Amount</div>
+                            <div class="detail-value highlight">${formatFullCurrency(amount)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Award ID</div>
+                            <div class="detail-value">${escHtml(awardId)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Period of Performance</div>
+                            <div class="detail-value">${formatDate(startDate)} &mdash; ${formatDate(endDate)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">${escHtml(location) || 'N/A'}</div>
+                        </div>
+                        ${naics ? `
+                        <div class="detail-item">
+                            <div class="detail-label">NAICS Code</div>
+                            <div class="detail-value">${escHtml(naics)} &mdash; ${escHtml(naicsDesc)}</div>
+                        </div>` : ''}
+                        ${psc ? `
+                        <div class="detail-item">
+                            <div class="detail-label">Product/Service Code</div>
+                            <div class="detail-value">${escHtml(psc)} &mdash; ${escHtml(pscDesc)}</div>
+                        </div>` : ''}
+                    </div>
+                    <div class="detail-label" style="margin-bottom: 8px;">Description</div>
+                    <div class="detail-desc">${escHtml(desc)}</div>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <a href="https://www.usaspending.gov/award/${escHtml(internalId)}" target="_blank"
+                           style="color: #0099ff; font-size: 14px; font-weight: 600; text-decoration: none;">
+                            View on USAspending.gov &#8594;
+                        </a>
+                    </div>
+                `;
+            } catch (err) {
+                body.innerHTML = '<div class="error-state"><h3>Error loading details</h3><p>' + escHtml(err.message) + '</p></div>';
+            }
+        }
+
+        function closeModal(e) {
+            if (e.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
