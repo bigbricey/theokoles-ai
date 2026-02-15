@@ -100,11 +100,11 @@ class handler(BaseHTTPRequestHandler):
                     "agency": safe_org(org_hierarchy, 1),
                     "office": safe_org(org_hierarchy, 2),
                     "type": opp_type_obj.get("value", ""),
-                    "posted_date": item.get("postedDate", ""),
+                    "posted_date": item.get("publishDate", ""),
                     "modified_date": item.get("modifiedDate", ""),
-                    "response_date": item.get("responseDeadLine", ""),
+                    "response_date": item.get("responseDate", ""),
                     "description": strip_html(description_html)[:500],
-                    "is_active": item.get("active", "") == "Yes",
+                    "is_active": bool(item.get("isActive", False)),
                     "sam_url": f"https://sam.gov/opp/{notice_id}/view",
                 })
 
